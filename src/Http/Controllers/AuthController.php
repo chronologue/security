@@ -3,8 +3,9 @@
 namespace Chronologue\Security\Http\Controllers;
 
 use Chronologue\Core\Support\Controller;
-use Laravel\Socialite\Two\InvalidStateException;
 use Chronologue\Security\Services\AuthService;
+use Illuminate\Auth\AuthenticationException;
+use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,6 +25,9 @@ class AuthController extends Controller
         );
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function callback(): RedirectResponse
     {
         try {

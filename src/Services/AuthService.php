@@ -2,12 +2,12 @@
 
 namespace Chronologue\Security\Services;
 
-use Chronologue\Core\Exceptions\UnauthenticatedException;
 use Chronologue\Core\Support\Service;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
 use Chronologue\Security\Database\Eloquent\User;
 use Chronologue\Security\Support\KeycloakProvider;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthService extends Service
 {
@@ -16,13 +16,16 @@ class AuthService extends Service
         return Socialite::driver('keycloak');
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function login(): void
     {
         /** @var KeycloakProvider $provider */
         $provider = Socialite::driver('keycloak');
 
         if (is_null($user = $provider->user())) {
-            throw new UnauthenticatedException(__('Invalid authenticated user.'));
+            throw new AuthenticationException();
         }
 
         $model = User::query()->updateOrCreate(['sub' => $user->getId()], [

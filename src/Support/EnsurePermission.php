@@ -2,12 +2,12 @@
 
 namespace Chronologue\Security\Support;
 
-use Chronologue\Core\Exceptions\UnauthorizedException;
+use Chronologue\Core\Exceptions\AccessDeniedException;
+use Chronologue\Security\Support\Attributes\Permission;
 use Closure;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Chronologue\Security\Support\Attributes\Permission;
 use ReflectionException;
 use ReflectionMethod;
 
@@ -27,7 +27,7 @@ class EnsurePermission
             return $next($request);
         }
 
-        throw new UnauthorizedException('Access denied.');
+        throw new AccessDeniedException();
     }
 
     /**
