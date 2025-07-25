@@ -28,13 +28,7 @@ class AuthService extends Service
             throw new AuthenticationException();
         }
 
-        $model = User::query()->updateOrCreate(['sub' => $user->getId()], [
-            'name' => $user->getName(),
-            'email' => $user->getEmail(),
-            'permissions' => $user['permissions'],
-            'access_token' => $user->token,
-            'refresh_token' => $user->refreshToken,
-        ]);
+        $model = $this->updateOrCreateModel($user);
 
         Auth::login($model);
     }
@@ -42,5 +36,18 @@ class AuthService extends Service
     public function logout(): void
     {
         Auth::logout();
+    }
+
+    protected function updateOrCreateModel($user): User
+    {
+        $sub = $user->getId();
+
+        return User::query()->updateOrCreate(compact('sub'), [
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'permissions' => $user['permissions'],
+            'access_token' => $user->token,
+            'refresh_token' => $user->refreshToken,
+        ]);
     }
 }
