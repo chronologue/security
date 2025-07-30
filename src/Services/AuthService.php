@@ -8,12 +8,19 @@ use Chronologue\Security\Support\KeycloakProvider;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use RuntimeException;
 
 class AuthService extends Service
 {
     public function provider(): KeycloakProvider
     {
-        return Socialite::driver('keycloak');
+        $driver = Socialite::driver('keycloak');
+
+        if (!($driver instanceof KeycloakProvider)) {
+            throw new RuntimeException('Invalid KeycloakProvider.');
+        }
+
+        return $driver;
     }
 
     /**
@@ -21,8 +28,7 @@ class AuthService extends Service
      */
     public function login(): void
     {
-        /** @var KeycloakProvider $provider */
-        $provider = Socialite::driver('keycloak');
+        $provider = $this->provider();
 
         if (is_null($user = $provider->user())) {
             throw new AuthenticationException();
