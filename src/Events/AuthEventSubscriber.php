@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronologue\Security\Events\Subscribers;
+namespace Chronologue\Security\Events;
 
 use Chronologue\Security\Database\Eloquent\User;
 use Chronologue\Security\Support\KeycloakProvider;

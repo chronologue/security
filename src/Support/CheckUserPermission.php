@@ -2,16 +2,16 @@
 
 namespace Chronologue\Security\Support;
 
-use Chronologue\Core\Exceptions\AccessDeniedException;
 use Chronologue\Security\Support\Attributes\Permission;
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use ReflectionException;
 use ReflectionMethod;
 
-class EnsurePermission
+class CheckUserPermission
 {
     /**
      * @throws ReflectionException
@@ -27,7 +27,8 @@ class EnsurePermission
             return $next($request);
         }
 
-        throw new AccessDeniedException();
+        /** @noinspection PhpMultipleClassDeclarationsInspection */
+        throw new AuthorizationException();
     }
 
     /**

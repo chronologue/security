@@ -3,10 +3,9 @@
 namespace Chronologue\Security;
 
 use Chronologue\Core\Support\ModuleServiceProvider;
-use Chronologue\Security\Events\Subscribers\AuthEventSubscriber;
+use Chronologue\Security\Events\AuthEventSubscriber;
 use Chronologue\Security\Support\KeycloakProvider;
 use Illuminate\Support\Facades\Event;
-use ReflectionClass;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class ServiceProvider extends ModuleServiceProvider
@@ -28,11 +27,4 @@ class ServiceProvider extends ModuleServiceProvider
     {
         Event::subscribe(AuthEventSubscriber::class);
     }
-
-    protected function initDirectory(): void
-    {
-        $class = new ReflectionClass(self::class);
-        $this->directory = dirname($class->getFileName());
-    }
-
 }
