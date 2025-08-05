@@ -6,19 +6,12 @@ use Chronologue\Core\Support\Service;
 use Chronologue\Security\Database\Eloquent\User;
 use Chronologue\Security\Support\KeycloakProvider;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use RuntimeException;
 
 class AuthService extends Service
 {
-    protected StatefulGuard $guard;
-
-    public function __construct(StatefulGuard $guard)
-    {
-        $this->guard = $guard;
-    }
-
     public function provider(): KeycloakProvider
     {
         $driver = Socialite::driver('keycloak');
@@ -41,12 +34,12 @@ class AuthService extends Service
             throw new AuthenticationException();
         }
 
-        $this->guard->login($this->updateOrCreateModel($user));
+        Auth::login($this->updateOrCreateModel($user));
     }
 
     public function logout(): void
     {
-        $this->guard->logout();
+        Auth::logout();
     }
 
     protected function updateOrCreateModel($user): User
